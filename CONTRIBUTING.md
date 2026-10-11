@@ -36,3 +36,8 @@ is not obvious.
 
 Do not include secrets, credentials, or private hostnames in issues, pull
 requests, or logs. See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By taking
+part, you agree to uphold it.
