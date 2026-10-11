@@ -9,6 +9,8 @@
 
 ServerWatch is a lightweight, self-hosted uptime monitoring platform for websites, APIs, hosts, DNS, and SSL certificates.
 
+![ServerWatch dashboard](docs/images/dashboard.png)
+
 ## Project Status
 
 Community Edition **0.1.0** — first release. The backend, dashboard, alerting, and
