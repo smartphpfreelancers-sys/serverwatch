@@ -359,6 +359,14 @@ the single biggest thing you can do to support the project. You can also
 [watch the repository](https://github.com/smartphpfreelancers-sys/serverwatch/subscription)
 for release notifications, or share it with your team.
 
+## Security
+
+Deploying on an internet-facing host? Enable account authentication and the
+read-only status page, and serve the dashboard over TLS. See
+[docs/SECURITY.md](docs/SECURITY.md) for the hardening guide, or run
+`sudo scripts/harden-server.sh` for a one-command setup. Report vulnerabilities
+per [SECURITY.md](SECURITY.md).
+
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and
