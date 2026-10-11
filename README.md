@@ -1,5 +1,12 @@
 # ServerWatch Community Edition
 
+[![CI](https://github.com/smartphpfreelancers-sys/serverwatch/actions/workflows/ci.yml/badge.svg)](https://github.com/smartphpfreelancers-sys/serverwatch/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/smartphpfreelancers-sys/serverwatch)](https://github.com/smartphpfreelancers-sys/serverwatch/releases)
+[![License](https://img.shields.io/github/license/smartphpfreelancers-sys/serverwatch)](LICENSE)
+[![Container](https://img.shields.io/badge/container-ghcr.io-2496ED?logo=docker&logoColor=white)](https://github.com/smartphpfreelancers-sys/serverwatch/pkgs/container/serverwatch)
+[![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)](https://go.dev)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+
 ServerWatch is a lightweight, self-hosted uptime monitoring platform for websites, APIs, hosts, DNS, and SSL certificates.
 
 ## Project Status
@@ -30,7 +37,7 @@ runs the monitor scheduler. It only needs a Postgres database.
 
 ```bash
 # 1. Grab a compose file and an env file
-curl -O https://raw.githubusercontent.com/serverwatch/serverwatch/main/deployments/docker/docker-compose.yml
+curl -O https://raw.githubusercontent.com/smartphpfreelancers-sys/serverwatch/main/deployments/docker/docker-compose.yml
 cp .env.example serverwatch.env        # edit POSTGRES_PASSWORD and any secrets
 
 # 2. Start the whole stack (app + Postgres)
@@ -344,6 +351,11 @@ Sponsorship keeps maintenance going and funds new features - it is a donation,
 not a license or a support contract. If the project is useful to you, the
 Sponsor button on the repository is the best way to help. Funding platforms are
 configured in [.github/FUNDING.yml](.github/FUNDING.yml).
+
+If ServerWatch is useful to you, a **⭐ Star** helps others discover it - it is
+the single biggest thing you can do to support the project. You can also
+[watch the repository](https://github.com/smartphpfreelancers-sys/serverwatch/subscription)
+for release notifications, or share it with your team.
 
 ## Contributing
 
