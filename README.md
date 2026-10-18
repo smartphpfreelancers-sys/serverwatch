@@ -87,7 +87,7 @@ Delivered in 0.1.0:
 - Email (SMTP) and Telegram alerts
 - Optional account authentication and shared API token
 - Security headers, rate limiting, audit log, and opt-in Prometheus metrics
-- Data retention, backup/restore, and Docker/systemd/Nginx deployment templates
+- Data retention, backup/restore, and Docker/systemd/Nginx/Caddy deployment templates
 - Opt-in public status page at /status
 
 Planned:
@@ -106,7 +106,7 @@ ServerWatch consists of:
 - React + TypeScript dashboard (`web/`)
 - PostgreSQL database
 - Optional Go agent (`agent/`) — a placeholder in 0.1.0; host metrics are planned
-- Docker Compose, systemd, and Nginx deployment templates
+- Docker Compose, systemd, Nginx, and Caddy deployment templates
 
 The backend performs all network monitoring. The agent is not required to run
 ServerWatch. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
@@ -119,7 +119,7 @@ ServerWatch. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - `database/` - migrations and database-related files
 - `docs/` - project documentation
 - `scripts/` - helper/install scripts (backup, restore, release)
-- `deployments/` - systemd, Nginx, and Docker deployment templates
+- `deployments/` - systemd, Nginx, Caddy, and Docker deployment templates
 
 ## Screenshots
 
@@ -307,8 +307,10 @@ Phase 0.50 adds hardening that is on by default plus opt-in features:
   token, or anonymous.
 - An optional Prometheus `/metrics` endpoint
   (`SERVERWATCH_METRICS_ENABLED=true`).
-- Ready-to-use `deployments/nginx/` and `deployments/systemd/` templates with
-  TLS guidance and service sandboxing.
+- Ready-to-use [Nginx](deployments/nginx/serverwatch.conf),
+  [Caddy](deployments/caddy/Caddyfile), and
+  [systemd](deployments/systemd/serverwatch.service) templates with TLS guidance
+  and service sandboxing.
 
 See [Security hardening](docs/CONFIGURATION.md#security-hardening) for details.
 

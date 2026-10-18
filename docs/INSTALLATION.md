@@ -1,7 +1,8 @@
 # Installation
 
 ServerWatch Community Edition runs as a single Go backend plus a Postgres
-container. The dashboard is static files served by Nginx (or any web server).
+container. The dashboard is static files served by Nginx, Caddy, or another web
+server.
 
 ## 1. Unpack the release
 
@@ -59,6 +60,11 @@ The unit reads `/opt/serverwatch/serverwatch.env` and starts Postgres first.
 
 ## 6. Serve the dashboard
 
+Choose either Nginx or Caddy. Both templates serve the dashboard, route API and
+status-page requests to the backend, and leave health probes public.
+
+### Nginx
+
 ```bash
 sudo cp deployments/nginx/serverwatch.conf /etc/nginx/sites-available/serverwatch
 sudo ln -s /etc/nginx/sites-available/serverwatch /etc/nginx/sites-enabled/serverwatch
@@ -68,6 +74,44 @@ sudo nginx -t && sudo systemctl reload nginx
 Nginx serves `web/dist`, proxies `/api`, and terminates TLS. See the HTTPS
 section at the bottom of the Nginx template, and set `SERVERWATCH_COOKIE_SECURE=true`
 once TLS works.
+
+### Caddy
+
+The [Caddy template](../deployments/caddy/Caddyfile) obtains and renews HTTPS
+certificates automatically. Replace `serverwatch.example.com` with your public
+hostname, then generate a hash for the edge-auth password:
+
+```bash
+caddy hash-password
+```
+
+Save the result in `/etc/caddy/.env` without quotes:
+
+```dotenv
+SERVERWATCH_CADDY_PASSWORD_HASH=<paste the generated hash here>
+```
+
+Set that file to mode `0600`, then add this systemd override with
+`sudo systemctl edit caddy`:
+
+```ini
+[Service]
+EnvironmentFile=/etc/caddy/.env
+```
+
+Install and validate the template before reloading Caddy:
+
+```bash
+sudo cp deployments/caddy/Caddyfile /etc/caddy/Caddyfile
+sudo caddy validate --config /etc/caddy/Caddyfile --envfile /etc/caddy/.env
+sudo systemctl daemon-reload
+sudo systemctl reload caddy
+```
+
+The Caddy edge-auth username is `serverwatch`. `/health`, `/ready`, `/status`,
+and `/status.css` stay public; the dashboard and `/api` require edge auth.
+`/metrics` is always denied by this public virtual host. Set
+`SERVERWATCH_COOKIE_SECURE=true` after HTTPS is working.
 
 ## Upgrading
 

@@ -1,0 +1,59 @@
+# ServerWatch Community Edition — Caddy reverse proxy.
+#
+# Replace serverwatch.example.com with the public DNS name for this host. Caddy
+# will obtain and renew its HTTPS certificate automatically when the DNS record
+# points here and ports 80 and 443 are reachable.
+#
+# Generate a password hash with `caddy hash-password`, then expose it to the
+# Caddy service as SERVERWATCH_CADDY_PASSWORD_HASH. Never put a plaintext
+# password in this file. See docs/INSTALLATION.md for the systemd setup.
+
+serverwatch.example.com {
+	encode zstd gzip
+
+	# Match the security headers applied by the Nginx deployment template.
+	header {
+		-Server
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Cross-Origin-Opener-Policy "same-origin"
+		Cross-Origin-Resource-Policy "same-origin"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'"
+	}
+
+	# Keep routing order explicit so public probes and the status page bypass
+	# edge authentication, while the dashboard and API remain protected.
+	route {
+		# Prometheus metrics must stay on a private listener or monitoring
+		# network. This public virtual host never proxies them.
+		@metrics path /metrics /metrics/*
+		respond @metrics 404
+
+		# Health probes and the read-only status page are intentionally public.
+		# /status.css is served by the backend alongside /status.
+		@public path /health /ready /status /status.css
+		handle @public {
+			reverse_proxy 127.0.0.1:8080
+		}
+
+		# Keep API requests out of the dashboard's SPA fallback.
+		@api path /api /api/*
+		handle @api {
+			basic_auth {
+				serverwatch {$SERVERWATCH_CADDY_PASSWORD_HASH}
+			}
+			reverse_proxy 127.0.0.1:8080
+		}
+
+		# Serve the dashboard and its client-side routes only after edge auth.
+		handle {
+			basic_auth {
+				serverwatch {$SERVERWATCH_CADDY_PASSWORD_HASH}
+			}
+			root * /opt/serverwatch/web/dist
+			try_files {path} {path}/ /index.html
+			file_server
+		}
+	}
+}
